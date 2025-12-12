@@ -17,7 +17,7 @@ import java.util.List;
 public class CategoriesController {
 
     CategoryDao categoryDao;
-    private ProductDao productDao;
+    ProductDao productDao;
 
     @Autowired
     public CategoriesController(CategoryDao dao) {
@@ -34,12 +34,9 @@ public class CategoriesController {
         return this.categoryDao.getById(id);
     }
 
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
-    @RequestMapping(path="/categories/1/products")
-    public List<Product> getProductsById(@PathVariable int categoryId) {
-        // get a list of product by categoryId
-        return null;
+    @RequestMapping(path="/categories/{id}/products",method=RequestMethod.GET)
+    public List<Product> getProductsById(@PathVariable int id) {
+        return this.productDao.listByCategoryId(id);
     }
 
     @RequestMapping(path="/categories",method=RequestMethod.POST)
