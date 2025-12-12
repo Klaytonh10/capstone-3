@@ -21,9 +21,9 @@ public class DatabaseConfig
     }
 
     @Autowired
-    public DatabaseConfig(@Value("${spring.datasource.url}") String url,
-                          @Value("${spring.datasource.username}") String username,
-                          @Value("${spring.datasource.password}") String password)
+    public DatabaseConfig(@Value("${datasource.url}") String url,
+                          @Value("${datasource.username}") String username,
+                          @Value("${datasource.password}") String password)
     {
         this.url = url;
         this.username = username;
