@@ -24,26 +24,25 @@ public class CategoriesController {
         this.categoryDao = dao;
     }
 
-    @RequestMapping(value="/categories",method=RequestMethod.GET)
+    @RequestMapping(path="/categories",method=RequestMethod.GET)
     public List<Category> getAll() {
         return this.categoryDao.getAllCategories();
     }
 
-    @RequestMapping(value="/categories",method=RequestMethod.GET)
+    @RequestMapping(path="/categories/{id}",method=RequestMethod.GET)
     public Category getById(@PathVariable int id) {
         return this.categoryDao.getById(id);
     }
 
     // the url to return all products in category 1 would look like this
     // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
+    @RequestMapping(path="/categories/1/products")
     public List<Product> getProductsById(@PathVariable int categoryId) {
         // get a list of product by categoryId
         return null;
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
+    @RequestMapping(path="/categories",method=RequestMethod.POST)
     public Category addCategory(@RequestBody Category category) {
         // insert the category
         return null;

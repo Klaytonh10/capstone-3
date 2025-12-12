@@ -28,12 +28,12 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         String sql = """
                 select * from categories;
                 """;
-        try(
+        try (
                 Connection connection = super.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                ) {
+        ) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("category_id");
                 String name = resultSet.getString("name");
                 String description = resultSet.getString("description");
@@ -49,7 +49,23 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public Category getById(int categoryId) {
-
+        String sql = """
+                select * from categories
+                where category_id = ?;
+                """;
+        try (
+                Connection connection = super.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            preparedStatement.setInt(1, categoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
+            return new Category(categoryId, name, description);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
