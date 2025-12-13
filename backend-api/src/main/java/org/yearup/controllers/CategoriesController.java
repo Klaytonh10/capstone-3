@@ -1,6 +1,7 @@
 package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
@@ -20,29 +21,34 @@ public class CategoriesController {
     ProductDao productDao;
 
     @Autowired
-    public CategoriesController(CategoryDao dao) {
-        this.categoryDao = dao;
+    public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
+        this.categoryDao = categoryDao;
+        this.productDao = productDao;
     }
 
     @RequestMapping(path="/categories",method=RequestMethod.GET)
     public List<Category> getAll() {
+        // receive all categories
         return this.categoryDao.getAllCategories();
     }
 
     @RequestMapping(path="/categories/{id}",method=RequestMethod.GET)
     public Category getById(@PathVariable int id) {
+        // select a category based on it's id
         return this.categoryDao.getById(id);
     }
 
     @RequestMapping(path="/categories/{id}/products",method=RequestMethod.GET)
     public List<Product> getProductsById(@PathVariable int id) {
+        // select all products under a specified category id
         return this.productDao.listByCategoryId(id);
     }
 
     @RequestMapping(path="/categories",method=RequestMethod.POST)
+    @ResponseStatus(value= HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category) {
         // insert the category
-        return null;
+        return this.categoryDao.create(category);
     }
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
