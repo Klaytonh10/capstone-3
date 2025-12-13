@@ -44,8 +44,9 @@ public class CategoriesController {
         return this.productDao.listByCategoryId(id);
     }
 
+    // make so only an admin can do this
     @RequestMapping(path="/categories",method=RequestMethod.POST)
-    @ResponseStatus(value= HttpStatus.CREATED)
+    @ResponseStatus(value=HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category) {
         // insert the category
         return this.categoryDao.create(category);
@@ -53,8 +54,9 @@ public class CategoriesController {
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
+    @RequestMapping(path="/categories/{id}",method=RequestMethod.PUT)
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
-        // update the category by id
+        this.categoryDao.update(id, category);
     }
 
 

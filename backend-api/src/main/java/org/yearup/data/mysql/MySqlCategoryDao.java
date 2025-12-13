@@ -82,6 +82,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getDescription());
             int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println("Rows inserted: " + rowsInserted);
             if(rowsInserted != 1) {
                 System.err.println("Hey now...you added more than one thing just then");
             }
@@ -98,7 +99,27 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public void update(int categoryId, Category category) {
-        // update category
+        String sql = """
+                update categories
+                set name = '?', description = '?'
+                where category_id = ?;
+                """;
+        try(
+                Connection connection = super.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                )  {
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getDescription());
+            preparedStatement.setInt(3, categoryId);
+            int rowsUpdate = preparedStatement.executeUpdate();
+            System.out.println("Rows update: " + rowsUpdate);
+            if(rowsUpdate != 1) {
+                System.err.println("Errrrrm...you just updated more than one category, buddy");
+                throw new RuntimeException("Errrrrm...you just updated more than one category, buddy");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
