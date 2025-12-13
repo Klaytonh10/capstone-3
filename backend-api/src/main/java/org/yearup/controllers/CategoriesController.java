@@ -2,6 +2,7 @@ package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
@@ -15,10 +16,12 @@ import java.util.List;
 // http://localhost:8080/categories
 // add annotation to allow cross site origin requests
 @RestController
+@RequestMapping("categories")
+@CrossOrigin
 public class CategoriesController {
 
-    CategoryDao categoryDao;
-    ProductDao productDao;
+    private CategoryDao categoryDao;
+    private ProductDao productDao;
 
     @Autowired
     public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
@@ -26,27 +29,30 @@ public class CategoriesController {
         this.productDao = productDao;
     }
 
-    @RequestMapping(path="/categories",method=RequestMethod.GET)
+    @GetMapping(path="")
+    @PreAuthorize("permitAll()")
     public List<Category> getAll() {
         // receive all categories
         return this.categoryDao.getAllCategories();
     }
 
-    @RequestMapping(path="/categories/{id}",method=RequestMethod.GET)
+    @GetMapping("{id}")
+    @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
         // select a category based on it's id
         return this.categoryDao.getById(id);
     }
 
-    @RequestMapping(path="/categories/{id}/products",method=RequestMethod.GET)
+    @GetMapping(path="{id}/products")
     public List<Product> getProductsById(@PathVariable int id) {
         // select all products under a specified category id
         return this.productDao.listByCategoryId(id);
     }
 
     // make so only an admin can do this
-    @RequestMapping(path="/categories",method=RequestMethod.POST)
+    @PostMapping()
     @ResponseStatus(value=HttpStatus.CREATED)
+    @PreAuthorize("hasRole(ROLE_ADMIN)")
     public Category addCategory(@RequestBody Category category) {
         // insert the category
         return this.categoryDao.create(category);
@@ -54,7 +60,8 @@ public class CategoriesController {
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
-    @RequestMapping(path="/categories/{id}",method=RequestMethod.PUT)
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole(ROLE_ADMIN)")
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
         this.categoryDao.update(id, category);
     }
@@ -62,7 +69,8 @@ public class CategoriesController {
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
-    @RequestMapping(path="/categories/{id}",method=RequestMethod.DELETE)
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole(ROLE_ADMIN)")
     public void deleteCategory(@PathVariable int id) {
         this.categoryDao.delete(id);
     }

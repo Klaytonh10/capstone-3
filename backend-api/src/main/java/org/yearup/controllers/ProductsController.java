@@ -52,6 +52,7 @@ public class ProductsController {
     }
 
     @PostMapping()
+    @ResponseStatus(value=HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Product addProduct(@RequestBody Product product) {
         try {
@@ -65,7 +66,7 @@ public class ProductsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateProduct(@PathVariable int id, @RequestBody Product product) {
         try {
-            productDao.create(product);
+            productDao.update(id, product);
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }

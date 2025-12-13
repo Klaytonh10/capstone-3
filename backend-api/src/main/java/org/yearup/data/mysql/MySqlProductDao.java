@@ -158,7 +158,6 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao {
             statement.setInt(7, product.getStock());
             statement.setBoolean(8, product.isFeatured());
             statement.setInt(9, productId);
-
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -174,7 +173,6 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, productId);
-
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
