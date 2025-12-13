@@ -54,7 +54,6 @@ public class CategoriesController {
     @ResponseStatus(value=HttpStatus.CREATED)
     @PreAuthorize("hasRole(ROLE_ADMIN)")
     public Category addCategory(@RequestBody Category category) {
-        // insert the category
         return this.categoryDao.create(category);
     }
 
