@@ -8,7 +8,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.ProductDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.data.UserDao;
+import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
+import org.yearup.models.ShoppingCartItem;
 import org.yearup.models.User;
 
 import java.security.Principal;
@@ -50,14 +52,17 @@ public class ShoppingCartController {
     }
 
     // add a POST method to add a product to the cart - the url should be
-    // https://localhost:8080/cart/products/15 (15 is the productId to be added
+    // https://localhost:8080/cart/products/15 (15 is the productId to be added)
     @GetMapping("/products/{id}")
-    @PreAuthorize("permitAll()")
-    public void addProduct() {
+    @PreAuthorize("hasRole(ROLE_USER)")
+    public void addItem(@PathVariable int productId) {
         try{
-
+            Product product = productDao.getById(productId);
+            ShoppingCartItem item = new ShoppingCartItem();
+            item.setProduct(product);
+            shoppingCartDao.addShoppingCartItem(item);
         } catch (Exception e) {
-
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
