@@ -24,6 +24,9 @@ public class ShoppingCartController {
     private UserDao userDao;
     private ProductDao productDao;
 
+    public ShoppingCartController() {
+    }
+
     @Autowired
     public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao,ProductDao productDao) {
         this.shoppingCartDao = shoppingCartDao;
@@ -33,6 +36,7 @@ public class ShoppingCartController {
 
     // each method in this controller requires a Principal object as a parameter
     @GetMapping("")
+    @PreAuthorize("permitAll()")
     public ShoppingCart getCart(Principal principal) {
         try {
             String userName = principal.getName();
@@ -47,6 +51,15 @@ public class ShoppingCartController {
 
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
+    @GetMapping("/products/{id}")
+    @PreAuthorize("permitAll()")
+    public void addProduct() {
+        try{
+
+        } catch (Exception e) {
+
+        }
+    }
 
 
     // add a PUT method to update an existing product in the cart - the url should be
