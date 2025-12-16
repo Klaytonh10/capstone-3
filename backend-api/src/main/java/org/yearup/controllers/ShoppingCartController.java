@@ -38,7 +38,7 @@ public class ShoppingCartController {
 
     // each method in this controller requires a Principal object as a parameter
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ShoppingCart getCart(Principal principal) {
         try {
             String userName = principal.getName();
