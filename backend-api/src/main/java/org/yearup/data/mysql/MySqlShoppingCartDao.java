@@ -53,7 +53,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     public ShoppingCart addShoppingCartItem(ShoppingCartItem item, User user, ShoppingCart shoppingCart) {
         String sql = """
                 insert into shopping_cart (user_id, product_id, quantity)
-                values (?,?,?) where user_id = ?;
+                values (?,?,?);
                 """;
         try (
                 Connection connection = super.getConnection();
@@ -62,12 +62,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             preparedStatement.setInt(1 ,user.getId());
             preparedStatement.setInt(2, item.getProductId());
             preparedStatement.setInt(3, item.getQuantity());
-            preparedStatement.setInt(4, user.getId());
-            int rowsHit = preparedStatement.executeUpdate();
-            if(rowsHit != 1) {
-
+            int itemsAdded = preparedStatement.executeUpdate();
+            if(itemsAdded > 0) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-
                 if (generatedKeys.next()) {
                     int orderId = generatedKeys.getInt(1);
                     return getByUserId(orderId);
