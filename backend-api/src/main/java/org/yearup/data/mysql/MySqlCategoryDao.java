@@ -119,7 +119,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     // uses "ON DELETE CASCADE"
     @Override
-    public void delete(int categoryId) {
+    public int delete(int categoryId) {
         String sql = """
                 delete from categories
                 where category_id = ?;
@@ -134,9 +134,11 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 System.err.println("Uh oh...that was more than one row deleted");
                 throw new RuntimeException("Uh oh...that was more than one row deleted");
             }
+            return rowsDeleted;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     private Category mapRow(ResultSet row) throws SQLException {
