@@ -38,7 +38,7 @@ public class ShoppingCartController {
 
     // each method in this controller requires a Principal object as a parameter
     @GetMapping("")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
     public ShoppingCart getCart(Principal principal) {
         try {
             String userName = principal.getName();
@@ -54,13 +54,18 @@ public class ShoppingCartController {
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added)
     @GetMapping("/products/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public void addItem(@PathVariable int productId) {
+    @ResponseStatus(value=HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN', 'USER')")
+    public ShoppingCart addItem(@PathVariable int productId, Principal principal) {
         try{
             Product product = productDao.getById(productId);
             ShoppingCartItem item = new ShoppingCartItem();
             item.setProduct(product);
-            shoppingCartDao.addShoppingCartItem(item);
+
+            ShoppingCart cart = getCart(principal);
+
+            ShoppingCart shoppingCart = shoppingCartDao.addShoppingCartItem(item, cart);
+            return shoppingCart;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }

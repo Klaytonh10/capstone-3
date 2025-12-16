@@ -49,8 +49,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public void addShoppingCartItem(ShoppingCartItem item) {
-
+    public ShoppingCart addShoppingCartItem(ShoppingCartItem item, ShoppingCart cart) {
+        cart.add(item);
+        return cart;
     }
 
     protected static Product mapRow(ResultSet row) throws SQLException {
