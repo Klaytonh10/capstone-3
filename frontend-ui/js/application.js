@@ -19,7 +19,6 @@ function showImageDetailForm(product, imageUrl) {
         name: product,
         imageUrl: imageUrl
     };
-
     templateBuilder.build('image-detail', imageDetail, 'login')
 }
 
@@ -70,13 +69,11 @@ function clearCart() {
 function setCategory(control) {
     productService.addCategoryFilter(control.value);
     productService.search();
-
 }
 
 function setSubcategory(control) {
     productService.addSubcategoryFilter(control.value);
     productService.search();
-
 }
 
 function setMinPrice(control) {
@@ -87,7 +84,6 @@ function setMinPrice(control) {
     const value = control.value != 0 ? control.value : "";
     productService.addMinPriceFilter(value)
     productService.search();
-
 }
 
 function setMaxPrice(control) {
@@ -98,7 +94,6 @@ function setMaxPrice(control) {
     const value = control.value != 1500 ? control.value : "";
     productService.addMaxPriceFilter(value)
     productService.search();
-
 }
 
 function closeError(control) {
@@ -108,6 +103,5 @@ function closeError(control) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
     loadHome();
 });

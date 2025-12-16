@@ -1,6 +1,7 @@
 package org.yearup.data.mysql;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
@@ -8,6 +9,7 @@ import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
 import org.yearup.models.ShoppingCartItem;
+import org.yearup.models.User;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -41,7 +43,6 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 cart.add(item);
             }
             return cart;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,9 +50,33 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public ShoppingCart addShoppingCartItem(ShoppingCartItem item, ShoppingCart cart) {
-        cart.add(item);
-        return cart;
+    public ShoppingCart addShoppingCartItem(ShoppingCartItem item, User user, ShoppingCart shoppingCart) {
+        String sql = """
+                insert into shopping_cart (user_id, product_id, quantity)
+                values (?,?,?) where user_id = ?;
+                """;
+        try (
+                Connection connection = super.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                ) {
+            preparedStatement.setInt(1 ,user.getId());
+            preparedStatement.setInt(2, item.getProductId());
+            preparedStatement.setInt(3, item.getQuantity());
+            preparedStatement.setInt(4, user.getId());
+            int rowsHit = preparedStatement.executeUpdate();
+            if(rowsHit != 1) {
+
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+                if (generatedKeys.next()) {
+                    int orderId = generatedKeys.getInt(1);
+                    return getByUserId(orderId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected static Product mapRow(ResultSet row) throws SQLException {

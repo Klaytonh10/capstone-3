@@ -53,22 +53,19 @@ public class ShoppingCartController {
 
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added)
-    @GetMapping("/products/{id}")
+    @PostMapping("/products/{productId}")
     @ResponseStatus(value=HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ShoppingCart addItem(@PathVariable int productId, Principal principal) {
-        try{
-            Product product = productDao.getById(productId);
-            ShoppingCartItem item = new ShoppingCartItem();
-            item.setProduct(product);
+        ShoppingCart shoppingCart = getCart(principal);
+        User user = userDao.getByUserName(principal.getName());
 
-            ShoppingCart cart = getCart(principal);
+        Product product = productDao.getById(productId);
+        ShoppingCartItem item = new ShoppingCartItem();
+        item.setProduct(product);
 
-            ShoppingCart shoppingCart = shoppingCartDao.addShoppingCartItem(item, cart);
-            return shoppingCart;
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+        shoppingCartDao.addShoppingCartItem(item,user,shoppingCart);
+        return shoppingCart;
     }
 
 

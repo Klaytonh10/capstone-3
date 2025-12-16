@@ -102,7 +102,6 @@ class ProductService {
                          product.imageUrl = "no-image.jpg";
                      }
                  })
-
                  templateBuilder.build('product', data, 'content', this.enableButtons);
 
              })
