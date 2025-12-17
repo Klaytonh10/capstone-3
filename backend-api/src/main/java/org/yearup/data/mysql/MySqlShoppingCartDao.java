@@ -117,7 +117,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     //@Override
     //public ShoppingCart removeSpecificCartItem(ShoppingCartItem item, User user, ShoppingCart shoppingCart) {
     //    String sql = """
-    //            delete
+    //
     //            """;
 //
     //    return null;

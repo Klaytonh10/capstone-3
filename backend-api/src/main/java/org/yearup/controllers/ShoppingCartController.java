@@ -87,6 +87,8 @@ public class ShoppingCartController {
         return shoppingCartDao.addShoppingCartItem(item, user.getId());
     }
 
+    // add a DELETE method to clear all products from the current users cart
+    // https://localhost:8080/cart
     @DeleteMapping("")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ShoppingCart deleteCart(Principal principal) {
@@ -96,25 +98,21 @@ public class ShoppingCartController {
         return shoppingCartDao.deleteShoppingCart(user.getId());
     }
 
-    //@DeleteMapping("products/{productId}")
-    //@PreAuthorize("hasAnyRole('ADMIN','USER')")
-    //public ShoppingCart removeSpecificCartItem(@PathVariable int productId, Principal principal) {
-//
-    //    String userName = principal.getName();
-    //    User user = userDao.getByUserName(userName);
-//
-    //    Product product = productDao.getById(productId);
-//
-    //    ShoppingCart shoppingCart = shoppingCartDao.getByUserId(user.getId());
-//
-    //    ShoppingCartItem item = new ShoppingCartItem();
-    //    item.setProduct(product);
-//
-    //    shoppingCartDao.removeSpecificCartItem(item, user, shoppingCart);
-    //    return null;
-    //}
+    @DeleteMapping("products/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ShoppingCart removeSpecificCartItem(@PathVariable int productId, Principal principal) {
 
-    // add a DELETE method to clear all products from the current users cart
-    // https://localhost:8080/cart
+        String userName = principal.getName();
+        User user = userDao.getByUserName(userName);
 
+        Product product = productDao.getById(productId);
+
+        ShoppingCart shoppingCart = shoppingCartDao.getByUserId(user.getId());
+
+        ShoppingCartItem item = new ShoppingCartItem();
+        item.setProduct(product);
+
+        shoppingCartDao.removeSpecificCartItem(item, user, shoppingCart);
+        return null;
+    }
 }
