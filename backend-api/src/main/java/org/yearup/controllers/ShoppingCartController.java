@@ -55,7 +55,7 @@ public class ShoppingCartController {
     // https://localhost:8080/cart/products/15 (15 is the productId to be added)
     @PostMapping("/products/{id}")
     @ResponseStatus(value=HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN'), hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public void addItem(@PathVariable int id, Principal principal) {
 
         // get user's name and user information

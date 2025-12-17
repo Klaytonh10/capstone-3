@@ -17,11 +17,9 @@ header img
 }
 
 header div{
-    
     height: 100%;
     display: flex;
     align-items: flex-end;
-    
 }
 
 header #links
@@ -30,7 +28,6 @@ header #links
     justify-content: flex-start;
     align-items: flex-end;
     padding-right: 20px;
-    
 }
 
 header .cart

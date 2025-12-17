@@ -1,20 +1,14 @@
+
 {{#loggedin}}
 <div id="links">
     <img src="/images/logo.svg" alt="easyshop logo">
-    <div id="load-home-container link">
-        <a href="#" onclick="loadHome()">Home</a>
-    </div>
-    <div id="edit-profile-container link">
-        <a href="#" onclick="editProfile()">Profile</a>
-    </div>
-    <div id="show-cart-container link">
-        <a href="#" onclick="showCart()">View Cart</a>
-    </div>
+    <a href="#" onclick="loadHome()">Home</a>
+    <a href="#" onclick="editProfile()">Profile</a>
+    <a href="#" onclick="showCart()">View Cart</a>
 </div>
 
 <div>
-    Welcome&nbsp;<span style="font-weight: bold">{{username}}</span>&nbsp;|&nbsp;<a href="#"
-        onclick="userService.logout();return false;">logout</a>
+    Welcome&nbsp;<span style="font-weight: bold">{{username}}</span>&nbsp;|&nbsp;<a href="#" onclick="userService.logout();return false;">logout</a>
     <div class="cart" onclick="showCart()">
         <i class="fa-solid fa-cart-shopping"></i>
         <div id="cart-items">0</div>
@@ -28,6 +22,6 @@
 </div>
 
 <div>
-    <a href="#" onclick="showLoginForm();return false;">login</a>
+    <a href="#"  onclick="showLoginForm();return false;">login</a>
 </div>
 {{/loggedout}}
