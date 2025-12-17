@@ -15,8 +15,8 @@ class ShoppingCartService {
         axios.post(url, {})// ,{headers})
             .then(response => {
                 this.setCart(response.data)
-
                 this.updateCartDisplay()
+                alert("Product added to cart.");
 
             })
             .catch(error => {
@@ -182,14 +182,10 @@ class ShoppingCartService {
             cartControl.innerText = itemCount;
         }
         catch (e) {
-
+            throw new Error("Cart display update failed.");
         }
     }
 }
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     cartService = new ShoppingCartService();

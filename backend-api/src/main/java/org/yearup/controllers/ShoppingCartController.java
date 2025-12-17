@@ -53,17 +53,17 @@ public class ShoppingCartController {
 
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added)
-    @PostMapping("/products/{id}")
+    @PostMapping("/products/{productId}")
     @ResponseStatus(value=HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public void addItem(@PathVariable int id, Principal principal) {
+    public ShoppingCart addItem(@PathVariable int productId, Principal principal) {
 
         // get user's name and user information
         String userName = principal.getName();
         User user = userDao.getByUserName(userName);
 
         // get product object by it the id
-        Product product = productDao.getById(id);
+        Product product = productDao.getById(productId);
 
         ShoppingCart shoppingCart = shoppingCartDao.getByUserId(user.getId());
 
@@ -71,6 +71,7 @@ public class ShoppingCartController {
         item.setProduct(product);
 
         shoppingCartDao.addShoppingCartItem(item,user,shoppingCart);
+        return shoppingCart;
     }
 
 

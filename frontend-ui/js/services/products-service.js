@@ -136,10 +136,6 @@ class ProductService {
 
 }
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     productService = new ProductService();
 
