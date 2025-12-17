@@ -68,7 +68,6 @@ public class ShoppingCartController {
         ShoppingCartItem item = new ShoppingCartItem();
         item.setProduct(product);
 
-
         return shoppingCartDao.addShoppingCartItem(item,user);
     }
 
@@ -84,13 +83,10 @@ public class ShoppingCartController {
 
         Product product = productDao.getById(productId);
 
-        ShoppingCart shoppingCart = shoppingCartDao.getByUserId(user.getId());
-
         ShoppingCartItem item = new ShoppingCartItem();
         item.setProduct(product);
 
-        shoppingCartDao.addShoppingCartItem(item, user);
-        return shoppingCart;
+        return shoppingCartDao.updateShoppingCartItem(item, user);
     }
 
     //@DeleteMapping("products/{productId}")

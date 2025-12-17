@@ -15,7 +15,7 @@ class ShoppingCartService {
       .then((response) => {
         this.setCart(response.data);
         this.updateCartDisplay();
-        alert("Product added to cart");
+        //alert("Product added to cart");
         //window.location.reload();
       })
       .catch((error) => {
