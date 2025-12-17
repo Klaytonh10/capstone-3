@@ -166,10 +166,8 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao {
 
     @Override
     public void delete(int productId) {
-
         String sql = "DELETE FROM products " +
                 " WHERE product_id = ?;";
-
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, productId);

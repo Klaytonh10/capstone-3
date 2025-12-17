@@ -15,8 +15,8 @@ class ShoppingCartService {
       .then((response) => {
         this.setCart(response.data);
         this.updateCartDisplay();
-        alert("Product added to cart.");
-        window.location.reload();
+        alert("Product added to cart");
+        //window.location.reload();
       })
       .catch((error) => {
         const data = {
@@ -26,6 +26,21 @@ class ShoppingCartService {
         templateBuilder.append("error", data, "errors");
       });
   }
+
+  //removeFromCart(productId) {
+  //  const url = `${config.baseUrl}/cart/products/${productId}`;
+//
+  //  axios
+  //      .delete(url, {})
+  //      .then((response) => {
+  //          this.setCart(response.data)
+  //          this.updateCartDisplay();
+  //          alert("Item deleted successfully");
+  //      })
+  //      .catch(error => {
+  //          console.error('There was an error: ', error);
+  //      })
+  //}
 
   setCart(data) {
     this.cart = {
@@ -122,7 +137,7 @@ class ShoppingCartService {
     let photoDiv = document.createElement("div");
     photoDiv.classList.add("photo");
     let img = document.createElement("img");
-    img.src = `/images/products/${item.product.imageUrl}`;
+    img.src = `./images/products/${item.product.imageUrl}`;
     img.addEventListener("click", () => {
       showImageDetailForm(item.product.name, img.src);
     });
