@@ -200,3 +200,12 @@ main > .content-form .cart-item
     margin-bottom: 2px !important;
 }
 
+.cart-item {
+    position: relative;
+}
+
+.butt-div {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}

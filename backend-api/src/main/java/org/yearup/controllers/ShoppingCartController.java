@@ -95,6 +95,18 @@ public class ShoppingCartController {
         shoppingCartDao.addShoppingCartItem(item, user, shoppingCart);
     }
 
+    @DeleteMapping("products/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ShoppingCart removeSpecificItem(@PathVariable int productId, Principal principal) {
+
+        String userName = principal.getName();
+        User user = userDao.getByUserName(userName);
+
+
+
+        return null;
+    }
+
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart
 
