@@ -66,14 +66,19 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             if(itemsAdded > 0) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    int orderId = generatedKeys.getInt(1);
-                    return getByUserId(orderId);
+                    int userId = generatedKeys.getInt(1);
+                    return getByUserId(userId);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void updateShopping() {
+
     }
 
     protected static Product mapRow(ResultSet row) throws SQLException {
