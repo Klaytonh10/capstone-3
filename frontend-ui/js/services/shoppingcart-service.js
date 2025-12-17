@@ -8,7 +8,7 @@ class ShoppingCartService {
 
   addToCart(productId) {
     const url = `${config.baseUrl}/cart/products/${productId}`;
-    // const headers = userService.getHeaders();
+    //  const headers = userService.getHeaders();
 
     axios
       .post(url, {}) // ,{headers})

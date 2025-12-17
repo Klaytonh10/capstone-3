@@ -77,16 +77,14 @@ public class ShoppingCartController {
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("products/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ShoppingCart updateCart(@PathVariable int productId,@RequestBody ShoppingCartItem shoppingCartItem, Principal principal) {
+    public ShoppingCart updateCart(@PathVariable int productId,@RequestBody ShoppingCartItem item, Principal principal) {
         String userName = principal.getName();
         User user = userDao.getByUserName(userName);
 
         Product product = productDao.getById(productId);
-
-        ShoppingCartItem item = new ShoppingCartItem();
         item.setProduct(product);
 
-        return shoppingCartDao.updateShoppingCartItem(item, user);
+        return shoppingCartDao.addShoppingCartItem(item, user);
     }
 
     //@DeleteMapping("products/{productId}")

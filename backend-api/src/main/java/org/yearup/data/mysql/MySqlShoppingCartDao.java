@@ -40,6 +40,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             while (resultSet.next()) {
                 ShoppingCartItem item = new ShoppingCartItem();
                 item.setProduct(mapRow(resultSet));
+                item.setQuantity(resultSet.getInt("quantity"));
                 cart.add(item);
             }
             return cart;
@@ -51,47 +52,45 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
     @Override
     public ShoppingCart addShoppingCartItem(ShoppingCartItem item, User user) {
-        String sql = """
+        ShoppingCart shoppingCart = getByUserId(user.getId());
+        String insertQuery = """
                 insert into shopping_cart (user_id, product_id, quantity)
                 values (?,?,?);
                 """;
-        try (
-                Connection connection = super.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ) {
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, item.getProductId());
-            preparedStatement.setInt(3, item.getQuantity());
-            int rowsAdded = preparedStatement.executeUpdate();
-            if(rowsAdded > 0) {
-                return getByUserId(user.getId());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public ShoppingCart updateShoppingCartItem(ShoppingCartItem item, User user) {
-        String sql = """
+        String updateQuery = """
                 update shopping_cart
-                set quantity = ?
-                where productId = ?;
+                set quantity = quantity + 1
+                where product_id = ? and user_id = ?;
                 """;
-        int quantity = item.getQuantity() + 1;
-        try(
-                Connection connection = super.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                ) {
-            preparedStatement.setInt(1, quantity);
-            preparedStatement.setInt(2, user.getId());
-            int rowsAdded = preparedStatement.executeUpdate();
-            if(rowsAdded > 0) {
-                return getByUserId(user.getId());
+        if(!shoppingCart.contains(item.getProductId())){
+            try (
+                    Connection connection = super.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            ) {
+                preparedStatement.setInt(1, user.getId());
+                preparedStatement.setInt(2, item.getProductId());
+                preparedStatement.setInt(3, item.getQuantity());
+                int rowsAdded = preparedStatement.executeUpdate();
+                if (rowsAdded > 0) {
+                    return getByUserId(user.getId());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            try (
+                    Connection connection = super.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+            ) {
+                preparedStatement.setInt(1, item.getProductId());
+                preparedStatement.setInt(2, user.getId());
+                int rowsAdded = preparedStatement.executeUpdate();
+                if (rowsAdded > 0) {
+                    return getByUserId(user.getId());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
