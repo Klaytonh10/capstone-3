@@ -14,7 +14,7 @@ class ShoppingCartService {
       .post(url, {}) // ,{headers})
       .then((response) => {
         this.setCart(response.data);
-        this.updateCartDisplay();
+        this.updateCartDisplay(response.data);
         //alert("Product added to cart");
         //window.location.reload();
       })
@@ -29,7 +29,7 @@ class ShoppingCartService {
 
   //removeFromCart(productId) {
   //  const url = `${config.baseUrl}/cart/products/${productId}`;
-//
+  //
   //  axios
   //      .delete(url, {})
   //      .then((response) => {
@@ -63,7 +63,7 @@ class ShoppingCartService {
       .then((response) => {
         this.setCart(response.data);
 
-        this.updateCartDisplay();
+        this.updateCartDisplay(response.data);
       })
       .catch((error) => {
         const data = {
@@ -176,7 +176,7 @@ class ShoppingCartService {
           this.cart.items.push(value);
         }
 
-        this.updateCartDisplay();
+        this.updateCartDisplay(response.data);
         this.loadCartPage();
       })
       .catch((error) => {
@@ -188,12 +188,15 @@ class ShoppingCartService {
       });
   }
 
-  updateCartDisplay() {
+  updateCartDisplay(data) {
     try {
-      const itemCount = this.cart.items.length;
-      const cartControl = document.getElementById("cart-items");
+        let itemCount = 0;
+        const cartControl = document.getElementById("cart-items");
 
-      cartControl.innerText = itemCount;
+        for(const [key, value] of Object.entries(data.items)) {
+            itemCount += value.quantity;
+        }
+        cartControl.innerText = itemCount;
     } catch (e) {
       throw new Error("Cart display update failed.");
     }

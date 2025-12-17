@@ -51,8 +51,8 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public ShoppingCart addShoppingCartItem(ShoppingCartItem item, User user) {
-        ShoppingCart shoppingCart = getByUserId(user.getId());
+    public ShoppingCart addShoppingCartItem(ShoppingCartItem item, int id) {
+        ShoppingCart shoppingCart = getByUserId(id);
         String insertQuery = """
                 insert into shopping_cart (user_id, product_id, quantity)
                 values (?,?,?);
@@ -67,12 +67,12 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                     Connection connection = super.getConnection();
                     PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
             ) {
-                preparedStatement.setInt(1, user.getId());
+                preparedStatement.setInt(1, id);
                 preparedStatement.setInt(2, item.getProductId());
                 preparedStatement.setInt(3, item.getQuantity());
                 int rowsAdded = preparedStatement.executeUpdate();
                 if (rowsAdded > 0) {
-                    return getByUserId(user.getId());
+                    return getByUserId(id);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -83,14 +83,33 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
             ) {
                 preparedStatement.setInt(1, item.getProductId());
-                preparedStatement.setInt(2, user.getId());
+                preparedStatement.setInt(2, id);
                 int rowsAdded = preparedStatement.executeUpdate();
                 if (rowsAdded > 0) {
-                    return getByUserId(user.getId());
+                    return getByUserId(id);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    @Override
+    public ShoppingCart deleteShoppingCart(int userId) {
+        String sql = """
+                delete from shopping_cart
+                where user_id = ?;
+                """;
+        try(
+                Connection connection = super.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+            return getByUserId(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

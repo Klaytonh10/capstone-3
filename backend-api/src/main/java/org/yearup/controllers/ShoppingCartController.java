@@ -68,7 +68,7 @@ public class ShoppingCartController {
         ShoppingCartItem item = new ShoppingCartItem();
         item.setProduct(product);
 
-        return shoppingCartDao.addShoppingCartItem(item,user);
+        return shoppingCartDao.addShoppingCartItem(item,user.getId());
     }
 
 
@@ -84,7 +84,16 @@ public class ShoppingCartController {
         Product product = productDao.getById(productId);
         item.setProduct(product);
 
-        return shoppingCartDao.addShoppingCartItem(item, user);
+        return shoppingCartDao.addShoppingCartItem(item, user.getId());
+    }
+
+    @DeleteMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    public ShoppingCart deleteCart(Principal principal) {
+        String userName = principal.getName();
+        User user = userDao.getByUserName(userName);
+
+        return shoppingCartDao.deleteShoppingCart(user.getId());
     }
 
     //@DeleteMapping("products/{productId}")
