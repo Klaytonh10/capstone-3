@@ -98,21 +98,17 @@ public class ShoppingCartController {
         return shoppingCartDao.deleteShoppingCart(user.getId());
     }
 
-    @DeleteMapping("products/{productId}")
+    @PutMapping("products/{productId}/remove")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ShoppingCart removeSpecificCartItem(@PathVariable int productId, Principal principal) {
+    public ShoppingCart removeSpecificCartItem(@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal) {
 
         String userName = principal.getName();
         User user = userDao.getByUserName(userName);
 
         Product product = productDao.getById(productId);
-
-        ShoppingCart shoppingCart = shoppingCartDao.getByUserId(user.getId());
-
-        ShoppingCartItem item = new ShoppingCartItem();
         item.setProduct(product);
 
-        shoppingCartDao.removeSpecificCartItem(item, user, shoppingCart);
-        return null;
+
+        return shoppingCartDao.removeSpecificCartItem(item, user.getId());
     }
 }

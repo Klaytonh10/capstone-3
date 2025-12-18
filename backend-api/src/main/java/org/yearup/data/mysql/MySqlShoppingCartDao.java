@@ -96,6 +96,50 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
+    public ShoppingCart removeSpecificCartItem(ShoppingCartItem item, int id) {
+        String updateQuery = """
+                update shopping_cart
+                set quantity = quantity - 1
+                where product_id = ? and user_id = ?;
+                """;
+        String deleteQuery = """
+                delete from shopping_cart
+                where product_id = ? and user_id = ?;
+                """;
+        if(item.getQuantity() > 1){
+            try (
+                    Connection connection = super.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+            ) {
+                preparedStatement.setInt(1, item.getProductId());
+                preparedStatement.setInt(2, id);
+                int rowsUpdated = preparedStatement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    return getByUserId(id);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try (
+                    Connection connection = super.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
+            ) {
+                preparedStatement.setInt(1, item.getProductId());
+                preparedStatement.setInt(2, id);
+                int rowsUpdated = preparedStatement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    return getByUserId(id);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public ShoppingCart deleteShoppingCart(int userId) {
         String sql = """
                 delete from shopping_cart
@@ -113,15 +157,6 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         }
         return null;
     }
-
-    //@Override
-    //public ShoppingCart removeSpecificCartItem(ShoppingCartItem item, User user, ShoppingCart shoppingCart) {
-    //    String sql = """
-    //
-    //            """;
-//
-    //    return null;
-    //}
 
     protected static Product mapRow(ResultSet row) throws SQLException {
         int productId = row.getInt("product_id");
