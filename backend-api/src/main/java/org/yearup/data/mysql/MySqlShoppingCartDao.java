@@ -14,6 +14,7 @@ import org.yearup.models.User;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Map;
 
 @Component
 public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDao {
@@ -96,40 +97,46 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public ShoppingCart removeSpecificCartItem(ShoppingCartItem item, int id) {
+    public ShoppingCart removeSpecificCartItem(int productId, int userId) {
+        ShoppingCart cart = getByUserId(userId);
+        ShoppingCartItem item = cart.get(productId);
         String updateQuery = """
                 update shopping_cart
-                set quantity = quantity - 1
+                set quantity = ?
                 where product_id = ? and user_id = ?;
                 """;
         String deleteQuery = """
                 delete from shopping_cart
                 where product_id = ? and user_id = ?;
                 """;
-        if(item.getQuantity() > 1){
-            try (
+        int quantity = item.getQuantity();
+        if(quantity > 1) {
+            quantity--;
+            item.setQuantity(quantity);
+            try(
                     Connection connection = super.getConnection();
                     PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
-            ) {
-                preparedStatement.setInt(1, item.getProductId());
-                preparedStatement.setInt(2, id);
-                int rowsUpdated = preparedStatement.executeUpdate();
-                if (rowsUpdated > 0) {
-                    return getByUserId(id);
+                    ) {
+                preparedStatement.setInt(1, quantity);
+                preparedStatement.setInt(2, productId);
+                preparedStatement.setInt(3, userId);
+                int rowsEffected = preparedStatement.executeUpdate();
+                if(rowsEffected > 0) {
+                    return getByUserId(userId);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
-            try (
+            try(
                     Connection connection = super.getConnection();
                     PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
             ) {
-                preparedStatement.setInt(1, item.getProductId());
-                preparedStatement.setInt(2, id);
-                int rowsUpdated = preparedStatement.executeUpdate();
-                if (rowsUpdated > 0) {
-                    return getByUserId(id);
+                preparedStatement.setInt(1, productId);
+                preparedStatement.setInt(2, userId);
+                int rowsEffected = preparedStatement.executeUpdate();
+                if(rowsEffected > 0) {
+                    return getByUserId(userId);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

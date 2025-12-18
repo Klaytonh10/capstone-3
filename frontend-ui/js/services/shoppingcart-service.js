@@ -27,20 +27,23 @@ class ShoppingCartService {
       });
   }
 
-  //removeFromCart(productId) {
-  //  const url = `${config.baseUrl}/cart/products/${productId}`;
-  //
-  //  axios
-  //      .delete(url, {})
-  //      .then((response) => {
-  //          this.setCart(response.data)
-  //          this.updateCartDisplay();
-  //          alert("Item deleted successfully");
-  //      })
-  //      .catch(error => {
-  //          console.error('There was an error: ', error);
-  //      })
-  //}
+  removeFromCart(productId) {
+    const url = `${config.baseUrl}/cart/products/${productId}`;
+  
+    axios
+        .delete(url)
+        .then((response) => {
+            this.setCart(response.data)
+            this.updateCartDisplay(response.data);
+        })
+        .catch((error) => {
+            const data = {
+              error: "Remove from cart failed.",
+            };
+
+            templateBuilder.append("error", data, "errors");
+        });
+  }
 
   setCart(data) {
     this.cart = {
@@ -130,9 +133,7 @@ class ShoppingCartService {
     button.classList.add("btn-danger");
     buttDiv.appendChild(button);
     button.innerText = "X";
-    button.addEventListener("click", () => {
-      alert("item deleted!");
-    });
+    button.addEventListener("click", () => this.removeFromCart(item.product.id));
 
     let photoDiv = document.createElement("div");
     photoDiv.classList.add("photo");
