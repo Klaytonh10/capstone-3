@@ -22,7 +22,6 @@ class ShoppingCartService {
         const data = {
           error: "Add to cart failed.",
         };
-
         templateBuilder.append("error", data, "errors");
       });
   }
@@ -65,7 +64,6 @@ class ShoppingCartService {
       .get(url)
       .then((response) => {
         this.setCart(response.data);
-
         this.updateCartDisplay(response.data);
       })
       .catch((error) => {
@@ -133,7 +131,7 @@ class ShoppingCartService {
     button.classList.add("btn-danger");
     buttDiv.appendChild(button);
     button.innerText = "X";
-    button.addEventListener("click", () => this.removeFromCart(item.product.id));
+    button.addEventListener("click", () => this.removeFromCart(item.product.productId));
 
     let photoDiv = document.createElement("div");
     photoDiv.classList.add("photo");

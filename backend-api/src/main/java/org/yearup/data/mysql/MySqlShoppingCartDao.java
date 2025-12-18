@@ -100,6 +100,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     public ShoppingCart removeSpecificCartItem(int productId, int userId) {
         ShoppingCart cart = getByUserId(userId);
         ShoppingCartItem item = cart.get(productId);
+        if(item == null) {
+            return cart;
+        }
         String updateQuery = """
                 update shopping_cart
                 set quantity = ?
