@@ -5,9 +5,36 @@
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
   --accent: #924a24;
+  --accent-dark: #743211;
+  --accent-dark-click: #5e2306;
   --text-muted: #666;
   --radius-sm: 6px;
   --radius-md: 10px;
+}
+
+.log-in-out {
+    color: var(--accent);
+}
+
+.btn {
+    background-color: var(--accent);
+    color: var(--bg-light);
+    border: var(--border-color);
+}
+
+.btn:hover {
+    background-color: var(--accent-dark);
+    color: var(--bg-light);
+}
+
+.btn:active {
+    scale: 95%;
+    color: var(--bg-light);
+    background-color: var(--accent-dark-click);
+}
+
+.btn:active::after {
+    background-color: var(--accent-dark);
 }
 
 header {
