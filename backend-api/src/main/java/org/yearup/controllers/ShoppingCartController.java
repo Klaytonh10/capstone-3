@@ -99,7 +99,6 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("products/{productId}")
-    @ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT)
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ShoppingCart removeSpecificCartItem(@PathVariable int productId, Principal principal) {
 

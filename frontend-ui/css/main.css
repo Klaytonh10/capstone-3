@@ -321,6 +321,10 @@ main {
   outline-offset: 4px;
 }
 
+#links img {
+  scale: 150%;
+}
+
 @media (max-width: 768px) {
     #links a {
         padding: 0.75rem;

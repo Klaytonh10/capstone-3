@@ -18,7 +18,7 @@ public class Product {
 
     public Product(int productId, String name, BigDecimal price, int categoryId, String description, String subCategory, int stock, boolean isFeatured, String imageUrl) {
         this.productId = productId;
-        this.name = name;
+        this.name = "Artisanal " + name;
         this.price = price;
         this.categoryId = categoryId;
         this.description = description;
