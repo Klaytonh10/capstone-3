@@ -28,20 +28,31 @@ class ShoppingCartService {
 
   removeFromCart(productId) {
     const url = `${config.baseUrl}/cart/products/${productId}`;
-  
-    axios
-        .delete(url)
-        .then((response) => {
-            this.setCart(response.data)
-            this.updateCartDisplay(response.data);
-        })
-        .catch((error) => {
-            const data = {
-              error: "Remove from cart failed.",
-            };
 
-            templateBuilder.append("error", data, "errors");
-        });
+    axios
+      .delete(url)
+      .then((response) => {
+        this.cart = {
+          items: [],
+          total: 0,
+        };
+
+        this.cart.total = response.data.total;
+
+        for (const [key, value] of Object.entries(response.data.items)) {
+          this.cart.items.push(value);
+        }
+
+        this.updateCartDisplay(response.data);
+        this.loadCartPage();
+      })
+      .catch((error) => {
+        const data = {
+          error: "Empty cart failed.",
+        };
+
+        templateBuilder.append("error", data, "errors");
+      });
   }
 
   setCart(data) {
@@ -131,7 +142,9 @@ class ShoppingCartService {
     button.classList.add("btn-danger");
     buttDiv.appendChild(button);
     button.innerText = "X";
-    button.addEventListener("click", () => this.removeFromCart(item.product.productId));
+    button.addEventListener("click", () => {
+      this.removeFromCart(item.product.productId);
+    });
 
     let photoDiv = document.createElement("div");
     photoDiv.classList.add("photo");
@@ -189,13 +202,13 @@ class ShoppingCartService {
 
   updateCartDisplay(data) {
     try {
-        let itemCount = 0;
-        const cartControl = document.getElementById("cart-items");
+      let itemCount = 0;
+      const cartControl = document.getElementById("cart-items");
 
-        for(const [key, value] of Object.entries(data.items)) {
-            itemCount += value.quantity;
-        }
-        cartControl.innerText = itemCount;
+      for (const [key, value] of Object.entries(data.items)) {
+        itemCount += value.quantity;
+      }
+      cartControl.innerText = itemCount;
     } catch (e) {
       throw new Error("Cart display update failed.");
     }
